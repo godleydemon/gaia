@@ -35,7 +35,7 @@ while true;do
           case $yn in
             [Yy]*)
               echo "Grabbing it by the pussy"
-              wget https://gist.githubusercontent.com/godleydemon/ff5bc25d7d8f87f26cb61f84352e1780/raw/d378309d5d21f6b1277a6f1bce06456937be6b02/server.properties
+              wget https://raw.githubusercontent.com/godleydemon/gaia/master/Master/server.properties
               break ;;
             [Nn]*)
               echo "Fuck This Shit Im Out"
