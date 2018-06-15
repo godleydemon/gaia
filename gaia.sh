@@ -4,7 +4,8 @@ clear
 echo "  *--==Gaia==--*"
 echo "[1] Create MC Server"
 echo "[2] Provision Server"
-echo "[3] Exit"
+echo "[3] Install Spigot Buildtools"
+echo "[4] Exit"
 echo "  *--==||||==--*"
 
 while true;do
@@ -145,6 +146,34 @@ while true;do
       echo "*--==done provisioning==--*"
       exit 0 ;;
     [3]*)
+      echo "*--==Installing BuildTools==--*"
+      apt-get update
+      if java -version | grep -q "java version" ; then
+        echo "Java was found, not installing"
+      else
+        echo "Java NOT installed! WTF!"
+        echo "Installing Java8"
+        apt-get install -y python-software-properties debconf-utils > /dev/null
+        add-apt-repository ppa:webupd8team/java > /dev/null
+        apt-get update > /dev/null
+        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
+        apt-get install -y oracle-java8-installer > /dev/null
+        echo "Finished installing Java8"
+      fi
+	  mkdir /home/buildtools
+	  wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O /home/buildtools/BuildTools.jar
+	  git config --global --unset core.autocrlf
+	  echo "Running buildtools Once, this will take a while"
+	  cd /home/buildtools
+	  java -jar /home/buildtools/BuildTools.jar
+	  echo "Moving new Spigot jar to serverjars directory"
+	  if [ ! -d "/home/serverjars" ]; then
+		mkdir /home/serverjars
+	  fi
+	  mv /home/buildtools/spigot-*.jar /home/serverjars/
+      exit 0 ;;
+    [4]*)
       echo "Fuck This Shit Im Out"
       exit 0 ;;
   esac
