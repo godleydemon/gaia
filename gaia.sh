@@ -128,7 +128,7 @@ while true;do
         echo "Finished installing Java8"
       fi
       echo "Installing a few packages, please wait"
-      apt-get install -y joe git expect htop unzip make python-software-properties python-dev python-twisted-core python-twisted-web python-twisted-words libssl-dev python-pip software-properties-common gist-paste gem > /dev/null
+      apt-get install -y joe git expect htop unzip make python-software-properties python-dev python-twisted-core python-twisted-web python-twisted-words libssl-dev python-pip software-properties-common gist-paste gem ufw > /dev/null
       pip install urwid feedparser psutil
       gem install haste system_timer bundler > /dev/null
       git config --global core.editor "nano"
@@ -139,6 +139,9 @@ while true;do
       sed -i "s/#Banner \/etc\/issue.net/Banner\ \/etc\/issue.net/g" /etc/ssh/sshd_config
       sed -i "s/X11Forwarding yes/X11Forwarding no/g" /etc/ssh/sshd_config
       service ssh restart
+      echo "*--==Opening port 22 and enabling UFW firewall==--*"
+      ufw allow 22
+      ufw enable
       echo "*--==done provisioning==--*"
       exit 0 ;;
     [3]*)
