@@ -147,7 +147,7 @@ while true;do
       sed -i "s/#PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
       sed -i "s/#Banner \/etc\/issue.net/Banner\ \/etc\/issue.net/g" /etc/ssh/sshd_config
       sed -i "s/X11Forwarding yes/X11Forwarding no/g" /etc/ssh/sshd_config
-      sed -i "s/#AuthorizedKeysFile     %h\/.ssh\/authorized_keys/AuthorizedKeysFile     %h\/.ssh\/authorized_keys/g" /etc/ssh/sshd_config
+      sed -i "s/#AuthorizedKeysFile/AuthorizedKeysFile/g" /etc/ssh/sshd_config
       service ssh restart
       echo "*--==Opening port 22 and enabling UFW firewall==--*"
       ufw allow 22
