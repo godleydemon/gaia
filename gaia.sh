@@ -50,20 +50,19 @@ while true;do
         exit 0
       fi
 
-      if java -version | grep -q "java version" ; then
+	  if [ ! -d "/usr/lib/jvm" ]; then
         echo "Java NOT installed! WTF!"
         echo "Installing Java8"
         apt-get install -y python-software-properties debconf-utils > /dev/null
-        add-apt-repository ppa:webupd8team/java > /dev/null
+        #echo deb http://ftp.debian.org/debian jessie-backports main >> /etc/apt/sources.list
+		add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main"
         apt-get update > /dev/null
-        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
-        echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
-        apt-get install -y oracle-java8-installer > /dev/null
+        echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+        echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
+		#apt-get install -t jessie-backports ca-certificates-java
+        apt-get install -y oracle-java8-installer 
         echo "Finished installing Java8"
-      else
-        echo "Java NOT installed! WTF!"
-        exit 0
-      fi
+	  fi
 
       read -p "Enter server name: " servername
       read -p "Enter port number: " portnumber
@@ -122,27 +121,26 @@ while true;do
       continue=yes
       exit 0 ;;
     [2]*)
-      apt-get update
+      apt-get update > /dev/null
       echo "Installing a few packages, please wait"
       apt-get install -y software-properties-common joe ssh git expect htop unzip make python-software-properties python-dev python-twisted-core python-twisted-web python-twisted-words libssl-dev python-pip software-properties-common gem ufw > /dev/null
       pip install urwid feedparser psutil > /dev/null
       gem install haste system_timer bundler > /dev/null
       git config --global core.editor "nano"
       echo "done installing packages"
-      if java -version | grep -q "java version" ; then
-        echo "Java was found, not installing"
-      else
+	  if [ ! -d "/usr/lib/jvm" ]; then
         echo "Java NOT installed! WTF!"
         echo "Installing Java8"
         apt-get install -y python-software-properties debconf-utils > /dev/null
-        echo deb http://ftp.debian.org/debian jessie-backports main >> /etc/apt/sources.list
+        #echo deb http://ftp.debian.org/debian jessie-backports main >> /etc/apt/sources.list
+		add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main"
         apt-get update > /dev/null
-        echo "openjdk-8-jdk-headless  shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
-        echo "openjdk-8-jdk-headless  shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
-	    apt-get install -t jessie-backports -y ca-certificates-java > /dev/null
-        apt-get install -y openjdk-8-jdk-headless > /dev/null
+        echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+        echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
+		#apt-get install -t jessie-backports ca-certificates-java
+        apt-get install -y oracle-java8-installer 
         echo "Finished installing Java8"
-      fi
+	  fi
 
       sed -i "s/#PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
       sed -i "s/#Banner \/etc\/issue.net/Banner\ \/etc\/issue.net/g" /etc/ssh/sshd_config
@@ -156,20 +154,17 @@ while true;do
       exit 0 ;;
     [3]*)
       echo "*--==Installing BuildTools==--*"
-      if java -version | grep -q "java version" ; then
-        echo "Java was found, not installing"
-      else
+	  if [ ! -d "/usr/lib/jvm" ]; then
         echo "Java NOT installed! WTF!"
         echo "Installing Java8"
         apt-get install -y python-software-properties debconf-utils > /dev/null
-        echo deb http://ftp.debian.org/debian jessie-backports main >> /etc/apt/sources.list
+		add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main"
         apt-get update > /dev/null
-        echo "openjdk-8-jdk-headless  shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
-        echo "openjdk-8-jdk-headless  shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
-		apt-get install -t jessie-backports ca-certificates-java
-        apt-get install -y openjdk-8-jdk-headless 
+        echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+        echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
+        apt-get install -y oracle-java8-installer > /dev/null
         echo "Finished installing Java8"
-      fi
+	  fi
 	  mkdir /home/buildtools
 	  wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O /home/buildtools/BuildTools.jar
 	  git config --global --unset core.autocrlf
