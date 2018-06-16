@@ -54,12 +54,10 @@ while true;do
         echo "Java NOT installed! WTF!"
         echo "Installing Java8"
         apt-get install -y python-software-properties debconf-utils > /dev/null
-        #echo deb http://ftp.debian.org/debian jessie-backports main >> /etc/apt/sources.list
 		add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main"
         apt-get update > /dev/null
         echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
         echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
-		#apt-get install -t jessie-backports ca-certificates-java
         apt-get install -y oracle-java8-installer 
         echo "Finished installing Java8"
 	  fi
@@ -123,7 +121,7 @@ while true;do
     [2]*)
       apt-get update > /dev/null
       echo "Installing a few packages, please wait"
-      apt-get install -y software-properties-common joe ssh git expect htop unzip make python-software-properties python-dev python-twisted-core python-twisted-web python-twisted-words libssl-dev python-pip software-properties-common gem ufw > /dev/null
+      apt-get install -y software-properties-common screen tmux joe ssh git expect htop unzip make python-software-properties python-dev python-twisted-core python-twisted-web python-twisted-words libssl-dev python-pip software-properties-common gem ufw > /dev/null
       pip install urwid feedparser psutil > /dev/null
       gem install haste system_timer bundler > /dev/null
       git config --global core.editor "nano"
@@ -132,12 +130,10 @@ while true;do
         echo "Java NOT installed! WTF!"
         echo "Installing Java8"
         apt-get install -y python-software-properties debconf-utils > /dev/null
-        #echo deb http://ftp.debian.org/debian jessie-backports main >> /etc/apt/sources.list
 		add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main"
         apt-get update > /dev/null
         echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
         echo "oracle-java8-installer  shared/accepted-oracle-license-v1-1 seen true" | debconf-set-selections
-		#apt-get install -t jessie-backports ca-certificates-java
         apt-get install -y oracle-java8-installer 
         echo "Finished installing Java8"
 	  fi
