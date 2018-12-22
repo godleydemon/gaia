@@ -5,7 +5,8 @@ echo "  *--==Gaia==--*"
 echo "[1] Create MC Server"
 echo "[2] Provision Server"
 echo "[3] Install Spigot Buildtools"
-echo "[4] Exit"
+echo "[4] Delete a Server"
+echo "[5] Exit"
 echo "  *--==||||==--*"
 
 while true;do
@@ -209,7 +210,23 @@ while true;do
 	  fi
 	  mv /home/buildtools/spigot-*.jar /home/serverjars/
       exit 0 ;;
-    [4]*)
+	[4]*)
+      read -p "What is the server name we will be killing today?: " servername
+        while true;do
+          read -p "Warning this will destroy the server are you sure? [y/n]: " yn
+          case $yn in
+          [Yy]*)
+            echo "Eating Ass"
+            deluser --remove-home $servername
+			echo "Jobs Done"
+            break ;;
+          [Nn]*)
+            echo "Fuck This Shit Im Out"
+            exit 0 ;;
+          esac
+        done
+	  exit 0 ;;
+    [5]*)
       echo "Fuck This Shit Im Out"
       exit 0 ;;
   esac
