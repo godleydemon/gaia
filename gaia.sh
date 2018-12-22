@@ -14,13 +14,13 @@ while true;do
     [1]*)
       clear
       if [ ! -d "/home/serverjars" ]; then
-        echo "no serverjar directory in /home"
+        echo "no serverjars directory in /home"
         while true;do
           read -p "Want me to make it for you? (y/n): " yn
           case $yn in
             [Yy]*)
               echo "Shitting on your home folder"
-              mkdir /home/serverjar
+              mkdir /home/serverjars
               break ;;
             [Nn]*)
               echo "Fuck This Shit Im Out"
@@ -37,6 +37,22 @@ while true;do
             [Yy]*)
               echo "Grabbing it by the pussy"
               wget https://raw.githubusercontent.com/godleydemon/gaia/master/Master/server.properties
+              break ;;
+            [Nn]*)
+              echo "Fuck This Shit Im Out"
+              exit 0 ;;
+          esac
+        done
+      fi
+	  
+      if [ ! -f ./spigot.yml ]; then
+        echo "master spigot.yml file doesn't exist in root"
+        while true;do
+          read -p "Want me to get you one? (y/n): " yn
+          case $yn in
+            [Yy]*)
+              echo "Grabbing it by the balls"
+              wget https://raw.githubusercontent.com/godleydemon/gaia/master/Master/spigot.yml
               break ;;
             [Nn]*)
               echo "Fuck This Shit Im Out"
@@ -65,6 +81,7 @@ while true;do
       read -p "Enter server name: " servername
       read -p "Enter port number: " portnumber
       read -p "Enter ram ammount: " ramammount
+	  read -p "Is this connected to a bungee? [y/n]" bungeesupport
 
       echo "--==Server Jars==--"
       ls --format single-column /home/serverjars/
@@ -75,6 +92,11 @@ while true;do
       echo "port number = $portnumber"
       echo "ram ammount = $ramammount"
       echo "server jar = $jar"
+	  if [ $bungeesupport="y" ]; then
+		echo "Bungee support = true"
+	  else
+		echo "Bungee support = false"
+	  fi
 
       while true;do
         read -p "is this information correct? (y/n): " yn
@@ -90,26 +112,36 @@ while true;do
       done
 
       if [ $continue="yes" ]; then
-        useradd -s /bin/bash -d /home/$servername -m $servername
-        mkdir /home/$servername/.ssh
-        cp ~/.ssh/authorized_keys /home/$servername/.ssh/
-        cp /home/serverjars/$jar /home/$servername/
-        cp /root/server.properties /home/$servername/server.properties
-        touch /home/$servername/start.sh
-        touch /home/$servername/eula.txt
+        useradd -s /bin/bash -d /home/servers/$servername -m $servername
+        mkdir /home/servers/$servername/.ssh
+        cp ~/.ssh/authorized_keys /home/servers/$servername/.ssh/
+        cp /home/serverjars/$jar /home/servers/$servername/
+        cp /root/server.properties /home/servers/$servername/server.properties
+        touch /home/servers/$servername/start.sh
+        touch /home/servers/$servername/eula.txt
         echo "Creating start.sh file"
-        echo "while true; do" >> /home/$servername/start.sh
-        echo "java -server -XX:MetaspaceSize=512M -XX:MaxGCPauseMillis=40 -Xmx"$ramammount"G -Xms"$ramammount"G -jar \"$jar\"" >> /home/$servername/start.sh
-        echo 'echo "server restarting in 5 seconds"' >>/home/$servername/start.sh
-        echo 'echo "to kill this do Ctrl+C"' >> /home/$servername/start.sh
-        echo 'sleep 5' >> /home/$servername/start.sh
-        echo "done" >> /home/$servername/start.sh
-        chmod +x /home/$servername/start.sh
+        echo "while true; do" >> /home/servers/$servername/start.sh
+        echo "java -server -XX:MetaspaceSize=512M -XX:MaxGCPauseMillis=40 -Xmx"$ramammount"G -Xms"$ramammount"G -jar \"$jar\"" >> /home/servers/$servername/start.sh
+        echo 'echo "server restarting in 5 seconds"' >>/home/servers/$servername/start.sh
+        echo 'echo "to kill this do Ctrl+C"' >> /home/servers/$servername/start.sh
+        echo 'sleep 5' >> /home/servers/$servername/start.sh
+        echo "done" >> /home/servers/$servername/start.sh
+        chmod +x /home/servers/$servername/start.sh
         echo "changing the port number"
-        echo -e "\nserver-port=$portnumber" >> /home/$servername/server.properties
-        echo "eula=true" >> /home/$servername/eula.txt
+        echo "server-port=$portnumber" >> /home/servers/$servername/server.properties
+        echo "eula=true" >> /home/servers/$servername/eula.txt
+		if [ $bungeesupport="y" ]; then
+			echo "Changing server to offline mode because of Bungee support"
+			echo -e "online-mode=false" >> /home/servers/$servername/server.properties
+			cp /root/spigot.yml /home/servers/$servername/
+			sed -i '/  bungeecord: false/c\  bungeecord: true' /home/servers/$servername/spigot.yml
+		else
+			echo ""
+			cp /root/spigot.yml /home/servers/$servername/
+			echo "online-mode=true" >> /home/servers/$servername/server.properties
+		fi
         echo "changing ownership"
-        chown -R $servername:$servername /home/$servername
+        chown -R $servername:$servername /home/servers/$servername
         echo "*--=shits done boss=--*"
         echo "make sure to log in via the new useraccount dipshit"
       else
@@ -142,10 +174,14 @@ while true;do
       sed -i "s/#Banner \/etc\/issue.net/Banner\ \/etc\/issue.net/g" /etc/ssh/sshd_config
       sed -i "s/X11Forwarding yes/X11Forwarding no/g" /etc/ssh/sshd_config
       sed -i "s/#AuthorizedKeysFile/AuthorizedKeysFile/g" /etc/ssh/sshd_config
+	  mkdir ~/.ssh
+	  touch ~/.ssh/authorized_keys
       service ssh restart
       echo "*--==Opening port 22 and enabling UFW firewall==--*"
       ufw allow 22
       ufw enable
+	  echo "Login is now SSH keys only, please create an SSH key and put it into the authorized_keys file in ~/.ssh/authorized_keys"
+	  echo "Do not log out yet, if you do, you will be locked out of your system!"
       echo "*--==done provisioning==--*"
       exit 0 ;;
     [3]*)
