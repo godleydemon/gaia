@@ -154,7 +154,7 @@ while true;do
     [2]*)
       apt-get update > /dev/null
       echo "Installing a few packages, please wait"
-      apt-get install -y software-properties-common screen tmux joe ssh git expect htop unzip make python-software-properties python-dev python-twisted-core python-twisted-web python-twisted-words libssl-dev python-pip software-properties-common gem ufw > /dev/null
+      apt-get install -y software-properties-common screen tmux joe ssh git expect htop unzip make python-software-properties python-dev python-twisted-core python-twisted-web python-twisted-words libssl-dev python-pip software-properties-common gem ufw curl > /dev/null
       pip install urwid feedparser psutil > /dev/null
       gem install haste system_timer bundler > /dev/null
       git config --global core.editor "nano"
