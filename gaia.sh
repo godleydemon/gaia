@@ -63,6 +63,27 @@ while true;do
         apt-get install -y oracle-java8-installer 
         echo "Finished installing Java8"
 	  fi
+	  
+      if [ ! -f ./.ssh/authorized_keys ]; then
+        echo "we need an authorized key file to copy in /root/.ssh"
+        exit 0
+      fi
+
+	  if [ ! -f ./backup.sh ]; then
+	    echo "you dont have the master backup.sh"
+        while true;do
+          read -p "Want me to get you one? (y/n): " yn
+          case $yn in
+            [Yy]*)
+              echo "Twisting the  nipple"
+              wget https://raw.githubusercontent.com/godleydemon/gaia/master/Master/backup.sh
+              break ;;
+            [Nn]*)
+              echo "Fuck This Shit Im Out"
+              exit 0 ;;
+          esac
+        done
+	  fi
 
       read -p "Enter server name: " servername
       read -p "Enter port number: " portnumber
@@ -97,8 +118,11 @@ while true;do
         cp ~/.ssh/authorized_keys /home/servers/$servername/.ssh/
         cp /home/serverjars/$jar /home/servers/$servername/
         cp /root/server.properties /home/servers/$servername/server.properties
+		cp /root/backup.sh /home/servers/$servername/
+		mkdir /home/servers/$servername/backups
         touch /home/servers/$servername/start.sh
         touch /home/servers/$servername/eula.txt
+		sed -i -e "s/SERVERNAME/"$servername"/g" /home/servers/$servername/backup.sh
         echo "Creating start.sh file"
         echo "while true; do" >> /home/servers/$servername/start.sh
         echo "java -server -XX:MetaspaceSize=512M -XX:MaxGCPauseMillis=40 -Xmx"$ramammount"G -Xms"$ramammount"G -jar \"$jar\"" >> /home/servers/$servername/start.sh
@@ -218,4 +242,3 @@ while true;do
       exit 0 ;;
   esac
 done
-
